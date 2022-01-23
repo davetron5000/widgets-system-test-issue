@@ -1,24 +1,30 @@
-# Widgets - The App For Widgets
+# Demonstration of system testing issue
 
 ## Setup
 
-1. Pull down the app from version control
-2. Make sure you have Postgres running
-3. `bin/setup`
+1. You'll need Postgres running (see below for a way to do that)
+   - Modify `.env.development` and `.env.test` for your postgres credentials
+1. `bin/setup`
+1. `bin/rails test test/system`
+   - Everything should pass
+1. `bin/rails test:system`
+   - Should get failures when FactoryBot creates a factory that violates a unique index
 
-## Running The App
+### How to Setup Postgres
 
-1. `bin/run`
+1. Install Docker
+1. Create this `docker-compose.yml` file:
 
-## Tests and CI
+   ```yaml
+   version: "3.7"
+   services:
+     db:
+       image: postgres:13
+       ports:
+         - "5432:5432"
+       environment:
+         POSTGRES_PASSWORD: postgres
+   ```
+1. `docker-compose up`
 
-1. `bin/ci` contains all the tests and checks for the app
-2. `tmp/test.log` will use the production logging format
-    *not* the development one.
-
-## Production
-
-* All runtime configuration should be supplied
-  in the UNIX environment
-* Rails logging uses lograge. `bin/setup help`
-  can tell you how to see this locally
+Postgre is now available on localhost at port 5432
